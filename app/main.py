@@ -105,7 +105,7 @@ async def main():
     ]
 
     # Crear índice
-    vector_store = VectorStore()
+    vector_store = VectorStore(dimension=1536)
     vector_store.load()
 
     # Pregunta del usuario

@@ -35,7 +35,8 @@ async def main():
         embedding = await embedding_service.embed(doc)
         vectors.append(embedding)
 
-    vector_store.add_documents(documents, vectors)
+    for doc, vector in zip(documents, vectors):
+        vector_store.add(vector, doc)
     vector_store.save()
 
     print("Índice creado y guardado")
