@@ -60,8 +60,8 @@ class VectorStore:
 
         with open("app/embeddings/texts.json", "r") as f:
             self.texts = json.load(f)
-            
-    def search(self, query_vector, k=3, threshold=1.0):
+
+    def search(self, query_vector, k=10):
         query_vector = np.array([query_vector]).astype("float32")
 
         distances, indices = self.index.search(query_vector, k)
@@ -69,7 +69,7 @@ class VectorStore:
         results = []
 
         for distance, idx in zip(distances[0], indices[0]):
-            if distance < threshold:
+                print(f"Distancia: {distance} | Texto: {self.texts[idx]}")
                 results.append(self.texts[idx])
-
-        return results
+                
+        return results 

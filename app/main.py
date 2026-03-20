@@ -116,7 +116,7 @@ async def main():
     query_vector = await embedding_service.embed(query)
     
 
-    retrieved_context = vector_store.search(query_vector, k=10, threshold=2.0)
+    retrieved_context = vector_store.search(query_vector, k=10)
 
     "impresion para ver lista retieved context y evaluarla"
     print("\nResultados de búsqueda:")
