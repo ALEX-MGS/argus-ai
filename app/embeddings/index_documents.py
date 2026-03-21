@@ -1,6 +1,8 @@
 import asyncio
 from app.embeddings.vector_store import VectorStore
 from app.embeddings.embedding_service import EmbeddingService
+from app.processing.text_splitter import split_text
+
 
 documents = [
 "Python es un lenguaje de programación muy usado en ciencia de datos.",
@@ -32,8 +34,11 @@ async def main():
     vectors = []
 
     for doc in documents:
-        embedding = await embedding_service.embed(doc)
-        vectors.append(embedding)
+        chunks = split_text(doc)
+
+        for chunk in chunks:
+            embedding = await embedding_service.embed(chunk)
+            vector_store.add(embedding, chunk)
 
     for doc, vector in zip(documents, vectors):
         vector_store.add(vector, doc)
