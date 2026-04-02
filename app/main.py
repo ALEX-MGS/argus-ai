@@ -121,10 +121,16 @@ async def main():
     "impresion para ver lista retieved context y evaluarla"
     print("\nResultados de búsqueda:")
     for doc in retrieved_context:
-        print("-", doc)
+        print("-", doc["text"], "| fuente:", doc["source"])
     top_docs = retrieved_context[:3]
 
-    context_text = "\n".join(top_docs)
+    real_sources = list(set([doc["source"] for doc in top_docs]))
+    print("\nFuentes reales:")
+    for s in real_sources:
+        print("-", s)
+    context_text = "\n".join([doc["text"] for doc in top_docs])
+
+    sources = list(set([doc["source"] for doc in top_docs]))
 
     # 2️⃣ Prompt estructurado
     prompt = f"""

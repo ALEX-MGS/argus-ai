@@ -36,14 +36,18 @@ async def main():
     for doc in documents:
         chunks = split_text(doc)
 
+
         for chunk in chunks:
             embedding = await embedding_service.embed(chunk)
-            vector_store.add(embedding, chunk)
+            vector_store.add(embedding, chunk, source="dataset_prueba")
+
+
 
     for doc, vector in zip(documents, vectors):
         vector_store.add(vector, doc)
     vector_store.save()
 
+  
     print("Índice creado y guardado")
 
 asyncio.run(main())
