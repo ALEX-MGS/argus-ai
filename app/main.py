@@ -1,81 +1,21 @@
-"""import asyncio
-from app.models.openai_llm import OpenAILLM
-import logging
-from app.core.logging_config import setup_logging
-
-
-async def main():
-    setup_logging()
-    logger = logging.getLogger(__name__)
-
-    llm = OpenAILLM()
-
-    prompt = "Explica brevemente qué es un sistema RAG."
-
-    logger.info("Enviando prompt al modelo...")
-
-    response = await llm.generate(prompt)
-
-    logger.info("Respuesta recibida correctamente.")
-
-    print("\nRespuesta del modelo:\n")
-    print(response)
-
-
-if __name__ == "__main__":
-    asyncio.run(main())
-"""
-"""
-
 import asyncio
-
-from app.embeddings.embedding_service import EmbeddingService
-from app.embeddings.vector_store import VectorStore
-
-
-async def main():
-    embedding_service = EmbeddingService()
-
-    # Textos de prueba
-    texts = [
-        "Python es un lenguaje de programación",
-        "La inteligencia artificial está cambiando el mundo",
-        "Los muebles de MDF son muy usados en carpintería"
-    ]
-
-    # 1️⃣ Generar embedding del primer texto para saber dimensión
-    first_vector = await embedding_service.embed(texts[0])
-    dimension = len(first_vector)
-
-    # 2️⃣ Crear vector store
-    vector_store = VectorStore(dimension)
-
-    # 3️⃣ Agregar todos los textos
-    for text in texts:
-        vector = await embedding_service.embed(text)
-        vector_store.add(vector, text)
-
-    # 4️⃣ Hacer búsqueda
-    query = "¿Qué material se usa para hacer muebles?"
-    query_vector = await embedding_service.embed(query)
-
-    results = vector_store.search(query_vector, k=2)
-
-    print("\nResultados de búsqueda:")
-    for r in results:
-        print("-", r)
-
-
-if __name__ == "__main__":
-    asyncio.run(main())
-"""
-
-import asyncio
-
 from app.embeddings.embedding_service import EmbeddingService
 from app.embeddings.vector_store import VectorStore
 from app.models.openai_llm import OpenAILLM
 
+def rerank(query, docs):
+    scored_docs = []
+
+    for doc in docs:
+        text = doc["text"]
+
+        score = sum(1 for word in query.lower().split() if word in text.lower())
+
+        scored_docs.append((score, doc))
+
+    scored_docs.sort(reverse=True, key=lambda x: x[0])
+
+    return [doc for _, doc in scored_docs]
 
 async def main():
     embedding_service = EmbeddingService()
@@ -118,11 +58,22 @@ async def main():
 
     retrieved_context = vector_store.search(query_vector, k=10)
 
+    reranked_docs = rerank(query, retrieved_context)
+
+
+    " top_docs = reranked_docs[:3]"
+
     "impresion para ver lista retieved context y evaluarla"
     print("\nResultados de búsqueda:")
     for doc in retrieved_context:
         print("-", doc["text"], "| fuente:", doc["source"])
     top_docs = retrieved_context[:3]
+
+    "impresion para ver lista rerranked y evaluar diferencias con retrived context"
+    print("\nResultados de reranked:")
+    for doc in reranked_docs:
+        print("-", doc["text"], "| fuente:", doc["source"])
+    top_reranked = reranked_docs[:3]
 
     real_sources = list(set([doc["source"] for doc in top_docs]))
     print("\nFuentes reales:")
