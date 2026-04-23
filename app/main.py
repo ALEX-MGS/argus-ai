@@ -3,6 +3,7 @@ from app.embeddings.embedding_service import EmbeddingService
 from app.embeddings.vector_store import VectorStore
 from app.models.openai_llm import OpenAILLM
 
+
 def rerank(query, docs):
     scored_docs = []
 
@@ -44,12 +45,18 @@ async def main():
 "Los agentes de inteligencia artificial pueden automatizar tareas complejas."
     ]
 
+    chat_history = []
+
     # Crear índice
     vector_store = VectorStore(dimension=1536)
     vector_store.load()
 
     # Pregunta del usuario
     query = input("Haz una pregunta: ")
+
+    chat_history.append(f"Usuario: {query}")
+    "limite de acumulacio de historial de historial de contexto"
+    chat_history = chat_history[-6:]
 
 
     # 1️⃣ Buscar contexto relevante
@@ -85,7 +92,12 @@ async def main():
 
     # 2️⃣ Prompt estructurado
     prompt = f"""
+
+    
 Responde la pregunta usando SOLO el contexto proporcionado.
+
+Historial:
+{chr(10).join(chat_history)}
 
 Contexto:
 {context_text}
@@ -106,6 +118,10 @@ Devuelve la respuesta en JSON con este formato:
 
     # 3️⃣ Generar respuesta
     response = await llm.generate(prompt)
+
+    chat_history.append(f"Asistente: {response}")
+    "limite de acumulacio de historial de historial de contexto"
+    chat_history = chat_history[-6:]
 
     print("\nRespuesta final:\n")
     print(response)
