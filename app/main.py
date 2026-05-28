@@ -19,9 +19,10 @@ def rerank(query, docs):
     return [doc for _, doc in scored_docs]
 
 async def main():
+    #inicializar servicios 
     embedding_service = EmbeddingService()
     llm = OpenAILLM()
-
+    #cargar textos
     texts = [
 "Python es un lenguaje de programación muy usado en ciencia de datos.",
 "La inteligencia artificial está transformando muchas industrias.",
@@ -44,7 +45,7 @@ async def main():
 "Las bases de datos vectoriales almacenan representaciones numéricas de documentos.",
 "Los agentes de inteligencia artificial pueden automatizar tareas complejas."
     ]
-
+    # historial de chat
     chat_history = []
 
     # Crear índice
@@ -70,7 +71,7 @@ async def main():
 
     " top_docs = reranked_docs[:3]"
 
-    "impresion para ver lista retieved context y evaluarla"
+    "impresion para ver lista retrieved context y evaluarla"
     print("\nResultados de búsqueda:")
     for doc in retrieved_context:
         print("-", doc["text"], "| fuente:", doc["source"])
@@ -120,7 +121,7 @@ Devuelve la respuesta en JSON con este formato:
     response = await llm.generate(prompt)
 
     chat_history.append(f"Asistente: {response}")
-    "limite de acumulacio de historial de historial de contexto"
+    "limite de acumulacion de historial de historial de contexto"
     chat_history = chat_history[-6:]
 
     print("\nRespuesta final:\n")
