@@ -3,3 +3,5 @@ python-dotenv
 pydantic
 httpx
 tiktoken
+faiss-cpu
+numpy

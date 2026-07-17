@@ -31,20 +31,13 @@ async def main():
     embedding_service = EmbeddingService()
     vector_store = VectorStore()
 
-    vectors = []
-
     for doc in documents:
         chunks = split_text(doc)
-
 
         for chunk in chunks:
             embedding = await embedding_service.embed(chunk)
             vector_store.add(embedding, chunk, source="dataset_prueba")
 
-
-
-    for doc, vector in zip(documents, vectors):
-        vector_store.add(vector, doc)
     vector_store.save()
 
   

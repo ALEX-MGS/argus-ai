@@ -10,6 +10,3 @@ def split_text(text, chunk_size=100, overlap=20):
         start += chunk_size - overlap
 
     return chunks
-
-
-"email and user name added to git"
