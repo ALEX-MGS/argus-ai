@@ -44,6 +44,7 @@ async def main():
         # limitar historial
         chat_history = chat_history[-6:]
 
+
         # embeddings
         query_vector = await embedding_service.embed(query)
 
@@ -76,8 +77,16 @@ Contexto:
 Pregunta:
 {query}
 
-Responde analizando la información.
+Responde la pregunta usando SOLO el contexto proporcionado.
 No copies literalmente el contexto.
+Si la respuesta no está en el contexto, di que no tienes suficiente información.
+
+Devuelve la respuesta en JSON con este formato:
+
+{{
+ "answer": "respuesta clara",
+ "sources": ["fragmentos de contexto utilizados"]
+}}
 """
 
         # respuesta
