@@ -1,248 +1,165 @@
-# argus-ai
-Argus is an experimental AI research system focused on building reliable multi-agent knowledge workflows.
-
 # Argus
 
-**Argus** is an experimental AI research system designed to explore reliable architectures for knowledge retrieval, reasoning, and autonomous decision support.
+Sistema RAG (Retrieval-Augmented Generation) construido desde cero como plataforma
+de aprendizaje sobre arquitectura de sistemas de IA.
 
-The goal of this project is to build **robust AI systems**, not just simple chat interfaces. Argus focuses on modular design, evaluation, and observability to better understand how modern language models can be orchestrated into dependable workflows.
+El objetivo no es competir con asistentes existentes, sino entender de primera mano
+cómo se construye un sistema de recuperación y generación confiable: qué se rompe,
+por qué, y cómo se mide.
 
----
-
-## Project Goals
-
-Argus is being developed as a learning and experimentation platform to explore:
-
-* Retrieval-Augmented Generation (RAG)
-* AI system architecture
-* Multi-agent workflows
-* Memory systems for LLMs
-* Automated evaluation of AI outputs
-* Cost and performance monitoring
-* Reliable AI-assisted research pipelines
-
-The project emphasizes **engineering discipline** and **system reliability** over quick prototypes.
+> **Estado: en desarrollo temprano.** Funciona un pipeline RAG básico end-to-end.
+> Las capas de evaluación, monitoreo y orquestación aún no existen.
+> Ver [Roadmap](#roadmap).
 
 ---
 
-## Architecture Overview
+## Qué funciona hoy
 
-Argus follows a modular architecture to ensure flexibility and provider independence.
+Un chat por línea de comandos que responde preguntas sobre un corpus indexado:
+
+1. La consulta se convierte a embedding (`text-embedding-3-small`)
+2. Búsqueda de similitud en un índice FAISS local (`IndexFlatL2`)
+3. Reordenamiento léxico de los resultados por coincidencia de palabras
+4. Los 3 mejores documentos se inyectan como contexto en el prompt
+5. El modelo genera la respuesta (OpenAI, configurable por `.env`)
+6. Se conserva historial de los últimos 6 turnos de conversación
+
+---
+
+## Estructura actual
 
 ```
-argus/
-│
-├── app/
-│   ├── core/
-│   │   ├── config.py
-│   │   ├── logging_config.py
-│   │
-│   ├── models/
-│   │   ├── base_llm.py
-│   │   ├── openai_llm.py
-│   │
-│   ├── ingestion/
-│   ├── processing/
-│   ├── retrieval/
-│   ├── generation/
-│   ├── evaluation/
-│   ├── monitoring/
-│
-├── tests/
-├── README.md
-├── requirements.txt
-└── .env
+app/
+├── core/
+│   ├── config.py              # carga de variables de entorno
+│   └── logging_config.py      # configuración de logging (aún sin conectar)
+├── models/
+│   ├── base_llm.py            # interfaz abstracta de proveedor
+│   └── openai_llm.py          # implementación OpenAI
+├── processing/
+│   └── text_splitter.py       # división de texto por caracteres
+├── embeddings/
+│   ├── embedding_service.py   # generación de embeddings
+│   ├── vector_store.py        # índice FAISS + persistencia
+│   └── index_documents.py     # script de indexación
+└── main.py                    # loop de chat
 ```
 
-### Key Design Principles
-
-**Provider abstraction**
-The system separates model interfaces from providers so models can be swapped easily.
-
-**Modular components**
-Each major capability is isolated into independent modules.
-
-**Observability first**
-Logging, evaluation, and monitoring are treated as first-class features.
-
-**Scalable architecture**
-The system is designed to evolve into a full multi-agent environment.
+Todo el código es agnóstico al dominio: no hay lógica específica de ningún caso de uso.
 
 ---
 
-## Core Components
+## Instalación
 
-### Model Layer
-
-Defines the abstraction layer for language models.
-
-* `BaseLLM` → provider-agnostic interface
-* `OpenAILLM` → implementation using OpenAI APIs
-
-Future providers may include:
-
-* open-source models
-* local inference
-* other AI providers
-
----
-
-### Retrieval Layer *(planned)*
-
-Responsible for knowledge retrieval and document search.
-
-Planned capabilities:
-
-* document ingestion
-* semantic embeddings
-* vector similarity search
-* hybrid retrieval strategies
-
----
-
-### Generation Layer *(planned)*
-
-Handles prompt construction and response generation.
-
-Features will include:
-
-* structured prompts
-* JSON outputs
-* response validation
-* prompt versioning
-
----
-
-### Evaluation Layer *(planned)*
-
-Automated evaluation of AI responses.
-
-Possible metrics:
-
-* factual grounding
-* relevance
-* coherence
-* coverage
-
----
-
-### Monitoring Layer *(planned)*
-
-Tracks system behavior and performance.
-
-Includes:
-
-* token usage
-* cost tracking
-* latency monitoring
-* error logging
-
----
-
-## Installation
-
-Clone the repository:
-
-```
-git clone https://github.com/your-username/argus.git
-cd argus
-```
-
-Create a virtual environment:
-
-```
+```bash
+git clone https://github.com/ALEX-MGS/argus-ai.git
+cd argus-ai
 python -m venv venv
-source venv/bin/activate
-```
-
-Install dependencies:
-
-```
+source venv/bin/activate      # Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
----
-
-## Environment Variables
-
-Create a `.env` file:
+Crear un archivo `.env` en la raíz:
 
 ```
 MODEL_PROVIDER=openai
 MODEL_NAME=gpt-4o-mini
-OPENAI_API_KEY=your_api_key_here
+OPENAI_API_KEY=tu_api_key
 ```
 
 ---
 
-## Running the Project
+## Uso
 
-Basic test run:
+Construir el índice (requiere llamadas a la API de OpenAI):
 
+```bash
+python -m app.embeddings.index_documents
 ```
-python app/main.py
+
+Iniciar el chat:
+
+```bash
+python -m app.main
 ```
 
-This will send a prompt to the configured model provider and return a response.
+Escribir `salir` para terminar.
 
 ---
 
-## Development Roadmap
+## Limitaciones conocidas
 
-Phase 1 – Core infrastructure
+Documentadas a propósito: son el trabajo pendiente, no defectos ocultos.
 
-* Provider abstraction
-* API communication
-* logging system
-
-Phase 2 – Retrieval system
-
-* embeddings
-* vector database
-* document ingestion
-
-Phase 3 – Memory systems
-
-* short-term memory
-* long-term vector memory
-* contextual retrieval
-
-Phase 4 – Multi-agent orchestration
-
-* planner agent
-* executor agent
-* critic agent
-* iterative task execution
-
-Phase 5 – Evaluation and reliability
-
-* automated scoring
-* hallucination detection
-* benchmark tests
+| # | Limitación | Impacto |
+|---|-----------|---------|
+| 1 | `IndexFlatL2` devuelve distancia L2 **al cuadrado**; con embeddings normalizados el rango es 0–4. El `threshold=2.0` solo descarta similitud coseno negativa. | El filtro de relevancia no filtra casi nada |
+| 2 | `text_splitter` corta por caracteres sin respetar límites de palabra ni frase | Fragmenta palabras en documentos reales |
+| 3 | El reordenamiento cuenta coincidencias por substring, sin descartar stopwords | Documentos largos e irrelevantes suben de posición |
+| 4 | `setup_logging()` está definida pero nunca se invoca | No hay logs en ejecución |
+| 5 | Sin conteo de tokens ni seguimiento de costos | No hay visibilidad de gasto |
+| 6 | Sin reintentos ni manejo de errores de API | Un rate limit tumba el proceso |
+| 7 | `BaseLLM` acepta un string y devuelve un string | No admite system prompts, mensajes multi-turno ni herramientas |
+| 8 | Dimensión del índice fija en 1536 | Cambiar de modelo de embeddings rompe el índice en silencio |
+| 9 | El corpus está hardcodeado en `index_documents.py` | No hay ingestión de archivos |
+| 10 | Sin evaluación automatizada | No hay forma de saber si un cambio mejora o empeora |
 
 ---
 
-## Why This Project Exists
+## Roadmap
 
-Modern AI development often focuses on quick demos rather than reliable systems.
+Nada de lo siguiente está implementado todavía.
 
-Argus exists to explore **how AI systems should be engineered**, with emphasis on:
+**Fase 1 — Corregir fundamentos**
+- Rediseñar `BaseLLM` con interfaz de mensajes (system + multi-turno + herramientas + uso de tokens)
+- Migrar a similitud coseno con `IndexFlatIP` y umbral interpretable
+- Conectar logging y añadir conteo de tokens y costo
+- Reintentos con backoff exponencial
 
-* reliability
-* modularity
-* observability
-* scalability
+**Fase 2 — Ingestión real**
+- Carga de archivos (`.md`, `.txt`, `.pdf`)
+- División por tokens respetando límites de frase y párrafo
+- Metadatos de origen por fragmento (archivo, posición)
 
-The long-term goal is to better understand the architecture of **autonomous AI systems**.
+**Fase 3 — Evaluación**
+- Conjunto de pares pregunta/respuesta con documento esperado (`must_cite`)
+- Métricas separadas de recuperación y de generación
+- Casos de ausencia y de trampa para medir alucinación
+- Ejecución automatizada antes de cada cambio
+
+**Fase 4 — Recuperación agéntica**
+- Búsqueda iterativa: el modelo decide qué consultar y reformula
+- Herramientas expuestas por interfaz estándar
+- Recuperación híbrida (semántica + léxica)
+
+**Fase 5 — Orquestación**
+- Descomposición de tareas en pasos
+- Verificación de respuestas contra las fuentes citadas
 
 ---
 
-## License
+## Dominios de prueba
 
-MIT License
+El código no depende de ningún dominio. Los conjuntos de evaluación sí, porque
+medir precisión exige un corpus con respuestas conocidas.
+
+- **Documentación de FAISS** — wiki oficial del proyecto (50 páginas técnicas)
+- Dominios adicionales pendientes, para verificar que el núcleo sigue siendo agnóstico
 
 ---
 
-## Author
+## Notas de diseño
 
-Built as part of a personal research and engineering journey into AI systems architecture.
+**Por qué construirlo desde cero.** Existen frameworks que resuelven esto en menos
+líneas. El propósito aquí es entender los mecanismos: por qué una métrica de distancia
+mal interpretada invalida un filtro, por qué una estrategia de fragmentación decide la
+calidad de la recuperación, por qué sin evaluación no se puede afirmar que algo mejoró.
+
+**Por qué se documentan las limitaciones.** Un sistema cuyos defectos están medidos
+y escritos es más confiable que uno cuyos defectos son desconocidos.
+
+---
+
+## Licencia
+
+MIT
