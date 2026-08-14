@@ -40,7 +40,8 @@ async def main():
 
     vector_store.save()
 
-  
     print("Índice creado y guardado")
 
-asyncio.run(main())
+
+if __name__ == "__main__":
+    asyncio.run(main())

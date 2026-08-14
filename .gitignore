@@ -14,3 +14,10 @@ __pycache__/
 .DS_Store
 
 /venv
+
+# Artefactos generados (índice y metadatos: se reconstruyen con index_documents.py)
+*.index
+app/embeddings/documents.json
+
+# Corpus de evaluación clonado
+evals/**/corpus/
