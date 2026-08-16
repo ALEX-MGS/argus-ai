@@ -1,46 +1,102 @@
+"""Construcción del índice vectorial a partir de una carpeta de documentos.
+
+Uso:
+    python -m app.embeddings.index_documents evals/faiss_docs/corpus
+    python -m app.embeddings.index_documents <ruta> --exclude logs_bench_all_ivf
+    python -m app.embeddings.index_documents <ruta> --dry-run
+
+`--dry-run` recorre y fragmenta el corpus sin llamar a la API, para revisar
+cuántos fragmentos saldrían y de qué tamaño antes de gastar en embeddings.
+"""
+
+from __future__ import annotations
+
+import argparse
 import asyncio
-from app.embeddings.vector_store import VectorStore
+
 from app.embeddings.embedding_service import EmbeddingService
-from app.processing.text_splitter import split_text
+from app.embeddings.vector_store import VectorStore
+from app.ingestion.loader import DEFAULT_EXCLUDED_DIRS, load_documents
+from app.processing.text_splitter import count_tokens, split_text
 
 
-documents = [
-"Python es un lenguaje de programación muy usado en ciencia de datos.",
-"La inteligencia artificial está transformando muchas industrias.",
-"Los muebles de MDF son muy usados en carpintería moderna.",
-"El MDF es un tablero fabricado con fibras de madera prensadas.",
-"La madera maciza es un material tradicional en carpintería.",
-"Los gabinetes de cocina suelen fabricarse con MDF o triplay.",
-"La carpintería utiliza herramientas como sierras, taladros y lijadoras.",
-"FAISS es una biblioteca para búsqueda eficiente de vectores.",
-"Los embeddings convierten texto en vectores numéricos.",
-"La búsqueda semántica permite encontrar información por significado.",
-"Los modelos de lenguaje pueden generar texto automáticamente.",
-"Un sistema RAG combina búsqueda de información con generación de texto.",
-"Los talleres de carpintería producen muebles personalizados.",
-"Las cocinas modernas utilizan gabinetes modulares.",
-"El barniz protege la madera contra la humedad.",
-"Los sistemas de inteligencia artificial utilizan grandes cantidades de datos.",
-"Los modelos de lenguaje grandes se entrenan con millones de textos.",
-"La recuperación de información es una parte importante de muchos sistemas de IA.",
-"Las bases de datos vectoriales almacenan representaciones numéricas de documentos.",
-"Los agentes de inteligencia artificial pueden automatizar tareas complejas."
-    ]
-async def main():
+def build_chunks(
+    root: str,
+    chunk_size: int,
+    overlap: int,
+    exclude_dirs: tuple[str, ...],
+) -> list[tuple[str, str]]:
+    """Carga y fragmenta el corpus. Devuelve pares (texto, archivo de origen)."""
+    documents = load_documents(root, exclude_dirs=exclude_dirs)
+
+    chunks: list[tuple[str, str]] = []
+
+    for document in documents:
+        for chunk in split_text(document.text, chunk_size, overlap):
+            chunks.append((chunk, document.source))
+
+    print(f"Documentos cargados: {len(documents)}")
+    print(f"Fragmentos generados: {len(chunks)}")
+
+    return chunks
+
+
+def report_chunks(chunks: list[tuple[str, str]]) -> None:
+    """Imprime estadísticas de fragmentación sin llamar a la API."""
+    if not chunks:
+        print("No se generó ningún fragmento.")
+        return
+
+    sizes = [count_tokens(text) for text, _ in chunks]
+
+    print(f"Tokens por fragmento — mín: {min(sizes)} | "
+          f"máx: {max(sizes)} | promedio: {sum(sizes) // len(sizes)}")
+    print(f"Tokens totales a embeber: {sum(sizes)}")
+
+    print("\nMuestra del primer fragmento:")
+    print(f"[{chunks[0][1]}] {chunks[0][0][:300]}...")
+
+
+async def main() -> None:
+    parser = argparse.ArgumentParser(
+        description="Indexa una carpeta de documentos en el índice vectorial."
+    )
+    parser.add_argument("path", help="Carpeta raíz del corpus")
+    parser.add_argument("--chunk-size", type=int, default=400,
+                        help="Tokens máximos por fragmento (default: 400)")
+    parser.add_argument("--overlap", type=int, default=50,
+                        help="Tokens de solapamiento (default: 50)")
+    parser.add_argument("--exclude", nargs="*", default=[],
+                        help="Carpetas adicionales a omitir")
+    parser.add_argument("--dry-run", action="store_true",
+                        help="Fragmenta y reporta sin llamar a la API")
+
+    args = parser.parse_args()
+
+    exclude_dirs = DEFAULT_EXCLUDED_DIRS + tuple(args.exclude)
+
+    chunks = build_chunks(args.path, args.chunk_size, args.overlap, exclude_dirs)
+
+    if not chunks:
+        print("Nada que indexar.")
+        return
+
+    if args.dry_run:
+        report_chunks(chunks)
+        print("\nDry run: no se llamó a la API ni se guardó índice.")
+        return
 
     embedding_service = EmbeddingService()
     vector_store = VectorStore()
 
-    for doc in documents:
-        chunks = split_text(doc)
+    vectors = await embedding_service.embed_batch([text for text, _ in chunks])
 
-        for chunk in chunks:
-            embedding = await embedding_service.embed(chunk)
-            vector_store.add(embedding, chunk, source="dataset_prueba")
+    for vector, (text, source) in zip(vectors, chunks):
+        vector_store.add(vector, text, source=source)
 
     vector_store.save()
 
-    print("Índice creado y guardado")
+    print(f"Índice creado y guardado con {len(chunks)} fragmentos")
 
 
 if __name__ == "__main__":

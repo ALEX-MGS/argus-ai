@@ -5,3 +5,4 @@ httpx
 tiktoken
 faiss-cpu
 numpy
+pytest
