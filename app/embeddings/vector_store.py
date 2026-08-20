@@ -40,6 +40,13 @@ class VectorStore:
                 continue
             if threshold is not None and distance > threshold:
                 continue
-            results.append(self.documents[idx])
+
+            # Se copia el documento antes de anotarle el puntaje: escribirlo
+            # sobre el dict almacenado lo dejaría contaminado con el valor de
+            # una consulta anterior.
+            doc = dict(self.documents[idx])
+            doc["score"] = float(distance)
+
+            results.append(doc)
 
         return results

@@ -1,106 +1,46 @@
+"""Chat por línea de comandos sobre el corpus indexado.
+
+Requiere que el índice ya exista. Para construirlo:
+
+    python -m app.embeddings.index_documents <carpeta_del_corpus>
+"""
+
 import asyncio
+
 from app.embeddings.embedding_service import EmbeddingService
 from app.embeddings.vector_store import VectorStore
 from app.models.openai_llm import OpenAILLM
+from app.pipeline import RAGPipeline
 
 
-def rerank(query, docs):
-    scored_docs = []
-
-    for doc in docs:
-        text = doc["text"]
-
-        score = sum(1 for word in query.lower().split() if word in text.lower())
-
-        scored_docs.append((score, doc))
-
-    scored_docs.sort(reverse=True, key=lambda x: x[0])
-
-    return [doc for _, doc in scored_docs]
-
-async def main():
-
-    # 1️⃣ inicializaciones
-    embedding_service = EmbeddingService()
-    llm = OpenAILLM()
-
+async def main() -> None:
     vector_store = VectorStore()
     vector_store.load()
 
-    # 2️⃣ memoria de conversación
-    chat_history = []
+    pipeline = RAGPipeline(
+        embedding_service=EmbeddingService(),
+        vector_store=vector_store,
+        llm=OpenAILLM(),
+    )
 
-    # 3️⃣ loop del chat
+    # El historial vive aquí, no en el pipeline: la CLI es quien tiene una
+    # conversación. La evaluación llama al mismo pipeline sin historial.
+    history: list[str] = []
+
     while True:
-
         query = input("Haz una pregunta (o escribe salir): ")
 
         if query.lower() == "salir":
             break
 
-        # guardar pregunta
-        chat_history.append(f"Usuario: {query}")
+        result = await pipeline.answer(query, history)
 
-        # limitar historial
-        chat_history = chat_history[-6:]
+        history.append(f"Usuario: {query}")
+        history.append(f"Asistente: {result.answer}")
+        history = history[-pipeline.history_entries :]
 
-
-        # embeddings
-        query_vector = await embedding_service.embed(query)
-
-        # retrieval
-        retrieved_context = vector_store.search(
-            query_vector,
-            k=10,
-            threshold=2.0
-        )
-
-        # rerank
-        reranked_docs = rerank(query, retrieved_context)
-
-        # top docs
-        top_docs = reranked_docs[:3]
-
-        # contexto
-        context_text = "\n".join(
-            [doc["text"] for doc in top_docs]
-        )
-
-        # prompt
-        prompt = f"""
-Historial:
-{chr(10).join(chat_history)}
-
-Contexto:
-{context_text}
-
-Pregunta:
-{query}
-
-Responde la pregunta usando SOLO el contexto proporcionado.
-No copies literalmente el contexto.
-Si la respuesta no está en el contexto, di que no tienes suficiente información.
-
-Devuelve la respuesta en JSON con este formato:
-
-{{
- "answer": "respuesta clara",
- "sources": ["fragmentos de contexto utilizados"]
-}}
-"""
-
-        # respuesta
-        response = await llm.generate(prompt)
-
-        # guardar respuesta
-        chat_history.append(f"Asistente: {response}")
-
-        # limitar otra vez
-        chat_history = chat_history[-6:]
-
-        # imprimir
         print("\nRespuesta final:\n")
-        print(response)
+        print(result.answer)
 
 
 if __name__ == "__main__":

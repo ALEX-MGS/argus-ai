@@ -36,14 +36,26 @@ app/
 ├── models/
 │   ├── base_llm.py            # interfaz abstracta de proveedor
 │   └── openai_llm.py          # implementación OpenAI
+├── ingestion/
+│   └── loader.py              # carga de documentos desde el sistema de archivos
 ├── processing/
-│   └── text_splitter.py       # división de texto por caracteres
+│   └── text_splitter.py       # fragmentación medida en tokens
+├── retrieval/
+│   └── rerank.py              # reordenamiento léxico de los recuperados
 ├── embeddings/
-│   ├── embedding_service.py   # generación de embeddings
+│   ├── embedding_service.py   # generación de embeddings (individual y por lote)
 │   ├── vector_store.py        # índice FAISS + persistencia
-│   └── index_documents.py     # script de indexación
-└── main.py                    # loop de chat
+│   └── index_documents.py     # CLI de indexación
+├── pipeline.py                # consulta → recuperación → respuesta
+└── main.py                    # CLI de chat
+
+evals/                         # conjunto de evaluación y harness (ver evals/README.md)
+tests/                         # pruebas; no requieren API
 ```
+
+`pipeline.py` existe para que la CLI y la evaluación entren por el mismo camino.
+Si el harness replicara la lógica por su cuenta, mediría una copia en vez del
+sistema real.
 
 Todo el código es agnóstico al dominio: no hay lógica específica de ningún caso de uso.
 
