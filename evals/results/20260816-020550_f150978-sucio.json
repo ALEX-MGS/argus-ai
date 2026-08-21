@@ -1,0 +1,324 @@
+{
+  "fecha_utc": "2026-08-16T02:05:50.877054+00:00",
+  "commit": "f150978-sucio",
+  "dataset": "evals/faiss_docs/qa.jsonl",
+  "etiqueta": "linea base sin correcciones\n\n\nsalir\nexit()\n",
+  "modo": "completo",
+  "resumen": {
+    "casos": 10,
+    "errores": 0,
+    "recall_at_prompt": 0.875,
+    "recall_at_k": 0.875,
+    "precision_respuesta": 1.0,
+    "tasa_alucinacion": 0.0
+  },
+  "casos": [
+    {
+      "id": "q01",
+      "type": "factual",
+      "question": "What kind of distance does IndexFlatL2 report?",
+      "answer": "IndexFlatL2 reports squared Euclidean (L2) distance, avoiding the square root.",
+      "prompt_sources": [
+        "Guidelines-to-choose-an-index.md",
+        "Implementation-notes.md",
+        "MetricType-and-distances.md"
+      ],
+      "retrieved_sources": [
+        "Guidelines-to-choose-an-index.md",
+        "Implementation-notes.md",
+        "MetricType-and-distances.md",
+        "MetricType-and-distances.md",
+        "Faiss-indexes.md",
+        "MetricType-and-distances.md",
+        "Faiss-indexes.md",
+        "Additive-quantizers.md",
+        "MetricType-and-distances.md",
+        "Faiss-indexes.md"
+      ],
+      "must_cite": [
+        "MetricType-and-distances.md"
+      ],
+      "recall_at_prompt": true,
+      "recall_at_k": true,
+      "answer_correct": true,
+      "abstained": false,
+      "error": ""
+    },
+    {
+      "id": "q02",
+      "type": "factual",
+      "question": "Which Faiss index can guarantee exact search results?",
+      "answer": "El índice que puede garantizar resultados exactos es el IndexFlatL2 o IndexFlatIP.",
+      "prompt_sources": [
+        "Guidelines-to-choose-an-index.md",
+        "Home.md",
+        "FAQ.md"
+      ],
+      "retrieved_sources": [
+        "Guidelines-to-choose-an-index.md",
+        "Home.md",
+        "FAQ.md",
+        "FAQ.md",
+        "Implementation-notes.md",
+        "Home.md",
+        "How-to-make-Faiss-run-faster.md",
+        "Indexing-1T-vectors.md",
+        "Related-projects.md",
+        "Brute-force-search-without-an-index.md"
+      ],
+      "must_cite": [
+        "Guidelines-to-choose-an-index.md"
+      ],
+      "recall_at_prompt": true,
+      "recall_at_k": true,
+      "answer_correct": true,
+      "abstained": false,
+      "error": ""
+    },
+    {
+      "id": "q03",
+      "type": "factual",
+      "question": "Does the flat index require training?",
+      "answer": "No, el índice plano no requiere entrenamiento.",
+      "prompt_sources": [
+        "Guidelines-to-choose-an-index.md",
+        "Getting-started.md",
+        "Additive-quantizers.md"
+      ],
+      "retrieved_sources": [
+        "Guidelines-to-choose-an-index.md",
+        "Getting-started.md",
+        "Additive-quantizers.md",
+        "Getting-started.md",
+        "Faiss-indexes.md",
+        "FAQ.md",
+        "Faiss-indexes.md",
+        "Faiss-indexes.md",
+        "Lower-memory-footprint.md",
+        "FAQ.md"
+      ],
+      "must_cite": [
+        "Guidelines-to-choose-an-index.md"
+      ],
+      "recall_at_prompt": true,
+      "recall_at_k": true,
+      "answer_correct": true,
+      "abstained": false,
+      "error": ""
+    },
+    {
+      "id": "q04",
+      "type": "factual",
+      "question": "Which Python function normalizes vectors before indexing them for cosine similarity?",
+      "answer": "La función que normaliza los vectores antes de indexarlos para la similitud coseno es `faiss.normalize_L2` en Python.",
+      "prompt_sources": [
+        "MetricType-and-distances.md",
+        "FAQ.md",
+        "FAQ.md"
+      ],
+      "retrieved_sources": [
+        "MetricType-and-distances.md",
+        "FAQ.md",
+        "FAQ.md",
+        "FAQ.md",
+        "MetricType-and-distances.md",
+        "MetricType-and-distances.md",
+        "Comparing-GPU-vs-CPU.md",
+        "Getting-started.md",
+        "Getting-started.md",
+        "Lower-memory-footprint.md"
+      ],
+      "must_cite": [
+        "MetricType-and-distances.md"
+      ],
+      "recall_at_prompt": true,
+      "recall_at_k": true,
+      "answer_correct": true,
+      "abstained": false,
+      "error": ""
+    },
+    {
+      "id": "q05",
+      "type": "factual",
+      "question": "Which method removes a subset of vectors from an index?",
+      "answer": "El método que elimina un subconjunto de vectores de un índice es `remove_ids`, que utiliza un objeto `IDSelector` para decidir qué elementos deben ser eliminados.",
+      "prompt_sources": [
+        "Special-operations-on-indexes.md",
+        "Special-operations-on-indexes.md",
+        "Setting-search-parameters-for-one-query.md"
+      ],
+      "retrieved_sources": [
+        "Special-operations-on-indexes.md",
+        "Special-operations-on-indexes.md",
+        "Setting-search-parameters-for-one-query.md",
+        "Faiss-indexes.md",
+        "Special-operations-on-indexes.md",
+        "Special-operations-on-indexes.md",
+        "Indexing-1T-vectors.md",
+        "Indexing-1T-vectors.md",
+        "Lower-memory-footprint.md",
+        "Getting-started.md"
+      ],
+      "must_cite": [
+        "Special-operations-on-indexes.md"
+      ],
+      "recall_at_prompt": true,
+      "recall_at_k": true,
+      "answer_correct": true,
+      "abstained": false,
+      "error": ""
+    },
+    {
+      "id": "q06",
+      "type": "explicativa",
+      "question": "Why is inner product search on normalized vectors equivalent to cosine similarity?",
+      "answer": "La búsqueda de productos internos en vectores normalizados es equivalente a la similitud coseno porque la similitud coseno se define como el producto interno de dos vectores dividido por el producto de sus normas. Al normalizar los vectores, sus normas se convierten en 1, lo que hace que el producto interno sea igual a la similitud coseno. Por lo tanto, al realizar una búsqueda de producto interno máximo en vectores normalizados, se está buscando la mayor similitud coseno entre los vectores.",
+      "prompt_sources": [
+        "MetricType-and-distances.md",
+        "MetricType-and-distances.md",
+        "FAQ.md"
+      ],
+      "retrieved_sources": [
+        "MetricType-and-distances.md",
+        "MetricType-and-distances.md",
+        "FAQ.md",
+        "MetricType-and-distances.md",
+        "FAQ.md",
+        "Additive-quantizers.md",
+        "Additive-quantizers.md",
+        "Getting-started.md",
+        "Lower-memory-footprint.md",
+        "Getting-started.md"
+      ],
+      "must_cite": [
+        "MetricType-and-distances.md"
+      ],
+      "recall_at_prompt": true,
+      "recall_at_k": true,
+      "answer_correct": true,
+      "abstained": false,
+      "error": ""
+    },
+    {
+      "id": "q07",
+      "type": "multi_hop",
+      "question": "In an IVF index, which parameter should I increase to get more accuracy at the cost of search speed?",
+      "answer": "Debes aumentar el parámetro 'nprobe' en un índice IVF para obtener más precisión a costa de la velocidad de búsqueda.",
+      "prompt_sources": [
+        "FAQ.md",
+        "How-to-make-Faiss-run-faster.md",
+        "Indexing-1M-vectors.md"
+      ],
+      "retrieved_sources": [
+        "FAQ.md",
+        "How-to-make-Faiss-run-faster.md",
+        "Indexing-1M-vectors.md",
+        "FAQ.md",
+        "FAQ.md",
+        "Indexing-1M-vectors.md",
+        "Hybrid-CPU-GPU-search-and-multiple-GPUs.md",
+        "Indexing-1M-vectors.md",
+        "Additive-quantizers.md",
+        "Binary-hashing-index-benchmark.md"
+      ],
+      "must_cite": [
+        "Faiss-indexes.md",
+        "Faster-search.md"
+      ],
+      "recall_at_prompt": false,
+      "recall_at_k": false,
+      "answer_correct": true,
+      "abstained": false,
+      "error": ""
+    },
+    {
+      "id": "q08",
+      "type": "multi_hop",
+      "question": "Which index requires no training, does not support add_with_ids, and does not support removing vectors?",
+      "answer": "El índice que no requiere entrenamiento, no soporta add_with_ids y no permite la eliminación de vectores es HNSW.",
+      "prompt_sources": [
+        "Guidelines-to-choose-an-index.md",
+        "Special-operations-on-indexes.md",
+        "FAQ.md"
+      ],
+      "retrieved_sources": [
+        "Guidelines-to-choose-an-index.md",
+        "Special-operations-on-indexes.md",
+        "FAQ.md",
+        "CPU-Faiss---Intel-SVS-‐-Overview.md",
+        "Guidelines-to-choose-an-index.md",
+        "Special-operations-on-indexes.md",
+        "Faiss-indexes.md",
+        "FAQ.md",
+        "Indexing-1T-vectors.md",
+        "Getting-started.md"
+      ],
+      "must_cite": [
+        "Guidelines-to-choose-an-index.md"
+      ],
+      "recall_at_prompt": true,
+      "recall_at_k": true,
+      "answer_correct": true,
+      "abstained": false,
+      "error": ""
+    },
+    {
+      "id": "q09",
+      "type": "ausencia",
+      "question": "What software license is Faiss released under?",
+      "answer": "No tengo suficiente información.",
+      "prompt_sources": [
+        "Installing-Faiss.md",
+        "Home.md",
+        "Related-projects.md"
+      ],
+      "retrieved_sources": [
+        "Installing-Faiss.md",
+        "Home.md",
+        "Related-projects.md",
+        "Related-projects.md",
+        "Faiss-code-structure.md",
+        "Related-projects.md",
+        "Vector-codecs.md",
+        "_Sidebar.md",
+        "Faiss-code-structure.md",
+        "Home.md"
+      ],
+      "must_cite": [],
+      "recall_at_prompt": null,
+      "recall_at_k": null,
+      "answer_correct": true,
+      "abstained": true,
+      "error": ""
+    },
+    {
+      "id": "q10",
+      "type": "trampa",
+      "question": "How do I configure distributed Faiss replication on Kubernetes?",
+      "answer": "No tengo suficiente información.",
+      "prompt_sources": [
+        "Indexes-that-do-not-fit-in-RAM.md",
+        "FAQ.md",
+        "Installing-Faiss.md"
+      ],
+      "retrieved_sources": [
+        "Indexes-that-do-not-fit-in-RAM.md",
+        "FAQ.md",
+        "Installing-Faiss.md",
+        "Installing-Faiss.md",
+        "Faiss-building-blocks:-clustering,-PCA,-quantization.md",
+        "Related-projects.md",
+        "Low-level-benchmarks.md",
+        "How-to-make-Faiss-run-faster.md",
+        "Related-projects.md",
+        "Installing-Faiss.md"
+      ],
+      "must_cite": [],
+      "recall_at_prompt": null,
+      "recall_at_k": null,
+      "answer_correct": true,
+      "abstained": true,
+      "error": ""
+    }
+  ]
+}
