@@ -1,0 +1,941 @@
+{
+  "fecha_utc": "2026-08-21T06:54:59.562789+00:00",
+  "commit": "295685c-sucio",
+  "dataset": "evals/faiss_docs/qa.es.jsonl",
+  "etiqueta": "base espanol 30",
+  "modo": "completo",
+  "resumen": {
+    "casos": 30,
+    "errores": 0,
+    "recall_at_prompt": 0.609,
+    "recall_at_k": 0.826,
+    "precision_respuesta": 0.565,
+    "tasa_alucinacion": 0.143
+  },
+  "casos": [
+    {
+      "id": "f01",
+      "type": "factual",
+      "question": "¿Qué devuelve FAISS como distancia cuando se usa METRIC_L2?",
+      "answer": "FAISS devuelve la distancia euclidiana al cuadrado (L2) cuando se usa METRIC_L2, evitando la raíz cuadrada. Esto sigue siendo monótono como la distancia euclidiana, pero si se necesitan distancias exactas, se debe tomar la raíz cuadrada del resultado.",
+      "prompt_sources": [
+        "MetricType-and-distances.md",
+        "MetricType-and-distances.md",
+        "Implementation-notes.md"
+      ],
+      "retrieved_sources": [
+        "MetricType-and-distances.md",
+        "MetricType-and-distances.md",
+        "Implementation-notes.md",
+        "MetricType-and-distances.md",
+        "Home.md",
+        "Home.md",
+        "Guidelines-to-choose-an-index.md",
+        "Related-projects.md",
+        "Low-level-benchmarks.md",
+        "MetricType-and-distances.md"
+      ],
+      "must_cite": [
+        "MetricType-and-distances.md"
+      ],
+      "recall_at_prompt": true,
+      "recall_at_k": true,
+      "answer_correct": true,
+      "abstained": false,
+      "error": ""
+    },
+    {
+      "id": "f02",
+      "type": "factual",
+      "question": "¿Qué índices de FAISS garantizan resultados exactos?",
+      "answer": "Los índices que garantizan resultados exactos en FAISS son aquellos que utilizan el método 'Flat', como 'IndexFlat'.",
+      "prompt_sources": [
+        "Home.md",
+        "Lower-memory-footprint.md",
+        "Fast-accumulation-of-PQ-and-AQ-codes-(FastScan).md"
+      ],
+      "retrieved_sources": [
+        "Home.md",
+        "Lower-memory-footprint.md",
+        "Fast-accumulation-of-PQ-and-AQ-codes-(FastScan).md",
+        "How-to-make-Faiss-run-faster.md",
+        "Indexing-1M-vectors.md",
+        "Guidelines-to-choose-an-index.md",
+        "CPU-Faiss---Intel-SVS-‐-Overview.md",
+        "Indexing-1M-vectors.md",
+        "Related-projects.md",
+        "Indexing-1G-vectors.md"
+      ],
+      "must_cite": [
+        "Guidelines-to-choose-an-index.md"
+      ],
+      "recall_at_prompt": false,
+      "recall_at_k": true,
+      "answer_correct": true,
+      "abstained": false,
+      "error": ""
+    },
+    {
+      "id": "f03",
+      "type": "factual",
+      "question": "¿Qué tipo de dato deben tener las matrices de vectores en la API de Python de FAISS?",
+      "answer": "Las matrices de vectores en la API de Python de FAISS deben tener el tipo de dato 'float32'.",
+      "prompt_sources": [
+        "Vector-codecs.md",
+        "Getting-started.md",
+        "FAQ.md"
+      ],
+      "retrieved_sources": [
+        "Vector-codecs.md",
+        "Getting-started.md",
+        "FAQ.md",
+        "Implementation-notes.md",
+        "Lower-memory-footprint.md",
+        "FAQ.md",
+        "Binary-Indexes.md",
+        "Getting-started.md",
+        "FAQ.md",
+        "FAQ.md"
+      ],
+      "must_cite": [
+        "Getting-started.md"
+      ],
+      "recall_at_prompt": true,
+      "recall_at_k": true,
+      "answer_correct": true,
+      "abstained": false,
+      "error": ""
+    },
+    {
+      "id": "f04",
+      "type": "factual",
+      "question": "¿Cuál es el valor por defecto del parámetro nprobe?",
+      "answer": "No tengo suficiente información.",
+      "prompt_sources": [
+        "FAQ.md",
+        "FAQ.md",
+        "Additive-quantizers.md"
+      ],
+      "retrieved_sources": [
+        "FAQ.md",
+        "FAQ.md",
+        "Additive-quantizers.md",
+        "Faster-search.md",
+        "Index-IO,-cloning-and-hyper-parameter-tuning.md",
+        "Index-IO,-cloning-and-hyper-parameter-tuning.md",
+        "Faiss-indexes.md",
+        "Indexing-1M-vectors.md",
+        "Faster-search.md",
+        "Indexing-1G-vectors.md"
+      ],
+      "must_cite": [
+        "Faster-search.md"
+      ],
+      "recall_at_prompt": false,
+      "recall_at_k": true,
+      "answer_correct": false,
+      "abstained": true,
+      "error": ""
+    },
+    {
+      "id": "f05",
+      "type": "factual",
+      "question": "¿Soporta FAISS identificadores de tipo string para los vectores?",
+      "answer": "No, Faiss no soporta identificadores de tipo string para los vectores, solo acepta enteros de 64 bits.",
+      "prompt_sources": [
+        "FAQ.md",
+        "Lower-memory-footprint.md",
+        "FAQ.md"
+      ],
+      "retrieved_sources": [
+        "FAQ.md",
+        "Lower-memory-footprint.md",
+        "FAQ.md",
+        "Vector-codecs.md",
+        "Vector-codecs.md",
+        "CPU-Faiss---Intel-SVS-‐-Overview.md",
+        "Binary-Indexes.md",
+        "Faiss-indexes-(composite).md",
+        "Getting-started.md",
+        "Pre--and-post-processing.md"
+      ],
+      "must_cite": [
+        "FAQ.md"
+      ],
+      "recall_at_prompt": true,
+      "recall_at_k": true,
+      "answer_correct": true,
+      "abstained": false,
+      "error": ""
+    },
+    {
+      "id": "f06",
+      "type": "factual",
+      "question": "¿Qué significa que una búsqueda en FAISS devuelva ids con valor -1?",
+      "answer": "Cuando una búsqueda en FAISS devuelve ids con valor -1, significa que no se encontraron suficientes elementos para llenar la lista de resultados. Los resultados faltantes se establecen en -1. Para mejorar esto, se puede aumentar el número de elementos visitados durante la búsqueda ajustando el parámetro 'nprobe' en 'IndexIVF' o 'efSearch' en 'IndexHNSW'.",
+      "prompt_sources": [
+        "FAQ.md",
+        "FAQ.md",
+        "Home.md"
+      ],
+      "retrieved_sources": [
+        "FAQ.md",
+        "FAQ.md",
+        "Home.md",
+        "Pre--and-post-processing.md",
+        "Setting-search-parameters-for-one-query.md",
+        "Setting-search-parameters-for-one-query.md",
+        "FAQ.md",
+        "Setting-search-parameters-for-one-query.md",
+        "FAQ.md",
+        "Troubleshooting.md"
+      ],
+      "must_cite": [
+        "FAQ.md"
+      ],
+      "recall_at_prompt": true,
+      "recall_at_k": true,
+      "answer_correct": true,
+      "abstained": false,
+      "error": ""
+    },
+    {
+      "id": "f07",
+      "type": "factual",
+      "question": "¿FAISS permite reentrenar un índice que ya fue entrenado?",
+      "answer": "No, FAISS no permite reentrenar un índice que ya fue entrenado. Es más sencillo construir un nuevo índice en lugar de intentar 'desentrenar' uno existente.",
+      "prompt_sources": [
+        "FAQ.md",
+        "FAQ.md",
+        "FAQ.md"
+      ],
+      "retrieved_sources": [
+        "FAQ.md",
+        "FAQ.md",
+        "FAQ.md",
+        "Home.md",
+        "Indexes-that-do-not-fit-in-RAM.md",
+        "FAQ.md",
+        "How-to-make-Faiss-run-faster.md",
+        "How-to-make-Faiss-run-faster.md",
+        "Fast-accumulation-of-PQ-and-AQ-codes-(FastScan).md",
+        "Index-IO,-cloning-and-hyper-parameter-tuning.md"
+      ],
+      "must_cite": [
+        "FAQ.md"
+      ],
+      "recall_at_prompt": true,
+      "recall_at_k": true,
+      "answer_correct": true,
+      "abstained": false,
+      "error": ""
+    },
+    {
+      "id": "f08",
+      "type": "factual",
+      "question": "¿Cuáles son las dos variables de estado de un índice de FAISS?",
+      "answer": "No tengo suficiente información.",
+      "prompt_sources": [
+        "Faiss-indexes-(composite).md",
+        "Fast-accumulation-of-PQ-and-AQ-codes-(FastScan).md",
+        "How-to-make-Faiss-run-faster.md"
+      ],
+      "retrieved_sources": [
+        "Faiss-indexes-(composite).md",
+        "Fast-accumulation-of-PQ-and-AQ-codes-(FastScan).md",
+        "How-to-make-Faiss-run-faster.md",
+        "CPU-Faiss---Intel-SVS-‐-Overview.md",
+        "FAQ.md",
+        "CPU-Faiss---Intel-SVS-‐-Usage.md",
+        "Lower-memory-footprint.md",
+        "Home.md",
+        "Index-IO,-cloning-and-hyper-parameter-tuning.md",
+        "Guidelines-to-choose-an-index.md"
+      ],
+      "must_cite": [
+        "Getting-started.md"
+      ],
+      "recall_at_prompt": false,
+      "recall_at_k": false,
+      "answer_correct": false,
+      "abstained": true,
+      "error": ""
+    },
+    {
+      "id": "f09",
+      "type": "factual",
+      "question": "¿Cuánta memoria por vector consume un índice HNSW?",
+      "answer": "No tengo suficiente información.",
+      "prompt_sources": [
+        "Faiss-indexes.md",
+        "FAQ.md",
+        "The-index-factory.md"
+      ],
+      "retrieved_sources": [
+        "Faiss-indexes.md",
+        "FAQ.md",
+        "The-index-factory.md",
+        "Guidelines-to-choose-an-index.md",
+        "The-index-factory.md",
+        "Indexing-1M-vectors.md",
+        "Indexing-1T-vectors.md",
+        "Indexing-1M-vectors.md",
+        "Fast-accumulation-of-PQ-and-AQ-codes-(FastScan).md",
+        "Indexing-1M-vectors.md"
+      ],
+      "must_cite": [
+        "Guidelines-to-choose-an-index.md"
+      ],
+      "recall_at_prompt": false,
+      "recall_at_k": true,
+      "answer_correct": false,
+      "abstained": true,
+      "error": ""
+    },
+    {
+      "id": "f10",
+      "type": "factual",
+      "question": "¿Qué rango de valores se recomienda para el parámetro M de HNSW?",
+      "answer": "Se recomienda un rango de valores para el parámetro M de HNSW entre 4 y 64.",
+      "prompt_sources": [
+        "Guidelines-to-choose-an-index.md",
+        "Faiss-indexes.md",
+        "Indexing-1G-vectors.md"
+      ],
+      "retrieved_sources": [
+        "Guidelines-to-choose-an-index.md",
+        "Faiss-indexes.md",
+        "Indexing-1G-vectors.md",
+        "Indexing-1M-vectors.md",
+        "Indexing-1M-vectors.md",
+        "The-index-factory.md",
+        "Guidelines-to-choose-an-index.md",
+        "Indexing-1G-vectors.md",
+        "Indexing-1M-vectors.md",
+        "Indexing-1M-vectors.md"
+      ],
+      "must_cite": [
+        "Guidelines-to-choose-an-index.md"
+      ],
+      "recall_at_prompt": true,
+      "recall_at_k": true,
+      "answer_correct": true,
+      "abstained": false,
+      "error": ""
+    },
+    {
+      "id": "f11",
+      "type": "factual",
+      "question": "¿Se pueden hacer búsquedas concurrentes desde varios hilos en FAISS?",
+      "answer": "Sí, se pueden realizar búsquedas concurrentes desde varios hilos en el código de CPU de FAISS, pero no en el código de GPU. Sin embargo, no se permite la búsqueda o adición concurrente, ya que no hay un mecanismo de bloqueo para proteger estas operaciones.",
+      "prompt_sources": [
+        "Threads-and-asynchronous-calls.md",
+        "Threads-and-asynchronous-calls.md",
+        "FAQ.md"
+      ],
+      "retrieved_sources": [
+        "Threads-and-asynchronous-calls.md",
+        "Threads-and-asynchronous-calls.md",
+        "FAQ.md",
+        "Threads-and-asynchronous-calls.md",
+        "Related-projects.md",
+        "_Sidebar.md",
+        "Implementation-notes.md",
+        "Indexing-1T-vectors.md",
+        "Inverted-list-objects-and-scanners.md",
+        "Threads-and-asynchronous-calls.md"
+      ],
+      "must_cite": [
+        "FAQ.md"
+      ],
+      "recall_at_prompt": true,
+      "recall_at_k": true,
+      "answer_correct": false,
+      "abstained": false,
+      "error": ""
+    },
+    {
+      "id": "f12",
+      "type": "factual",
+      "question": "¿Cuántos bits por componente admite el objeto ProductQuantizer de FAISS?",
+      "answer": "El objeto ProductQuantizer de FAISS admite 8 bits por componente.",
+      "prompt_sources": [
+        "Faiss-building-blocks:-clustering,-PCA,-quantization.md",
+        "Faiss-building-blocks:-clustering,-PCA,-quantization.md",
+        "Faiss-indexes.md"
+      ],
+      "retrieved_sources": [
+        "Faiss-building-blocks:-clustering,-PCA,-quantization.md",
+        "Faiss-building-blocks:-clustering,-PCA,-quantization.md",
+        "Faiss-indexes.md",
+        "Faiss-indexes-(composite).md",
+        "The-index-factory.md",
+        "Vector-codecs.md",
+        "Additive-quantizers.md",
+        "Additive-quantizers.md",
+        "Home.md",
+        "Additive-quantizers.md"
+      ],
+      "must_cite": [
+        "FAQ.md"
+      ],
+      "recall_at_prompt": false,
+      "recall_at_k": false,
+      "answer_correct": false,
+      "abstained": false,
+      "error": ""
+    },
+    {
+      "id": "f13",
+      "type": "factual",
+      "question": "¿Qué hace la transformación L2norm del index_factory?",
+      "answer": "La transformación L2norm normaliza los vectores de entrada utilizando la norma L2.",
+      "prompt_sources": [
+        "The-index-factory.md",
+        "The-index-factory.md",
+        "MetricType-and-distances.md"
+      ],
+      "retrieved_sources": [
+        "The-index-factory.md",
+        "The-index-factory.md",
+        "MetricType-and-distances.md",
+        "Additive-quantizers.md",
+        "MetricType-and-distances.md",
+        "MetricType-and-distances.md",
+        "Faiss-indexes.md",
+        "Binary-Indexes.md",
+        "MetricType-and-distances.md",
+        "Guidelines-to-choose-an-index.md"
+      ],
+      "must_cite": [
+        "The-index-factory.md"
+      ],
+      "recall_at_prompt": true,
+      "recall_at_k": true,
+      "answer_correct": true,
+      "abstained": false,
+      "error": ""
+    },
+    {
+      "id": "f14",
+      "type": "factual",
+      "question": "¿Dónde se almacenan los índices de FAISS?",
+      "answer": "Los índices de FAISS se pueden almacenar en disco en lugar de en RAM.",
+      "prompt_sources": [
+        "Lower-memory-footprint.md",
+        "Home.md",
+        "_Sidebar.md"
+      ],
+      "retrieved_sources": [
+        "Lower-memory-footprint.md",
+        "Home.md",
+        "_Sidebar.md",
+        "Index-IO,-cloning-and-hyper-parameter-tuning.md",
+        "Related-projects.md",
+        "FAQ.md",
+        "How-to-make-Faiss-run-faster.md",
+        "CPU-Faiss---Intel-SVS-‐-Overview.md",
+        "Fast-accumulation-of-PQ-and-AQ-codes-(FastScan).md",
+        "Indexes-that-do-not-fit-in-RAM.md"
+      ],
+      "must_cite": [
+        "Guidelines-to-choose-an-index.md"
+      ],
+      "recall_at_prompt": false,
+      "recall_at_k": false,
+      "answer_correct": true,
+      "abstained": false,
+      "error": ""
+    },
+    {
+      "id": "f15",
+      "type": "factual",
+      "question": "¿Cuántos hilos usa FAISS por defecto y cómo se controla ese número?",
+      "answer": "Faiss utiliza por defecto el doble de hilos que núcleos disponibles, pero se puede ajustar el número de hilos de OpenMP manualmente. En algunas arquitecturas, establecer menos hilos que núcleos puede resultar en una ejecución más eficiente.",
+      "prompt_sources": [
+        "Threads-and-asynchronous-calls.md",
+        "Related-projects.md",
+        "FAQ.md"
+      ],
+      "retrieved_sources": [
+        "Threads-and-asynchronous-calls.md",
+        "Related-projects.md",
+        "FAQ.md",
+        "Threads-and-asynchronous-calls.md",
+        "Faiss-code-structure.md",
+        "Threads-and-asynchronous-calls.md",
+        "Low-level-benchmarks.md",
+        "Faiss-code-structure.md",
+        "_Sidebar.md",
+        "FAQ.md"
+      ],
+      "must_cite": [
+        "Threads-and-asynchronous-calls.md"
+      ],
+      "recall_at_prompt": true,
+      "recall_at_k": true,
+      "answer_correct": false,
+      "abstained": false,
+      "error": ""
+    },
+    {
+      "id": "m01",
+      "type": "multi_hop",
+      "question": "Quiero indexar vectores para similitud coseno. ¿Qué métrica debo usar, qué preprocesamiento hace falta, y qué cadena del index_factory aplica esa normalización?",
+      "answer": "Para indexar vectores para similitud coseno, debes usar la métrica de producto interno (Inner Product). Es necesario normalizar los vectores antes de realizar la búsqueda. La cadena del index_factory que aplica esta normalización es 'Flat' para el índice exacto, pero para la similitud coseno específicamente, se recomienda usar 'IndexFlatIP'.",
+      "prompt_sources": [
+        "Guidelines-to-choose-an-index.md",
+        "Faiss-indexes.md",
+        "Indexing-1T-vectors.md"
+      ],
+      "retrieved_sources": [
+        "Guidelines-to-choose-an-index.md",
+        "Faiss-indexes.md",
+        "Indexing-1T-vectors.md",
+        "Vector-codec-benchmarks.md",
+        "CPU-Faiss---Intel-SVS-‐-Usage.md",
+        "CPU-Faiss---Intel-SVS-‐-Usage.md",
+        "MetricType-and-distances.md",
+        "MetricType-and-distances.md",
+        "MetricType-and-distances.md",
+        "Indexing-1T-vectors.md"
+      ],
+      "must_cite": [
+        "MetricType-and-distances.md",
+        "The-index-factory.md"
+      ],
+      "recall_at_prompt": false,
+      "recall_at_k": true,
+      "answer_correct": false,
+      "abstained": false,
+      "error": ""
+    },
+    {
+      "id": "m02",
+      "type": "multi_hop",
+      "question": "Si uso un índice IVF y quiero más precisión a costa de velocidad, ¿qué parámetro ajusto y en qué dirección? ¿Y qué ocurre si lo llevo hasta el valor de nlist?",
+      "answer": "Para aumentar la precisión en un índice IVF a costa de velocidad, debes ajustar el parámetro 'nprobe' en dirección a un valor más alto. Sin embargo, si 'nprobe' se lleva al valor de 'nlist', se realizará una búsqueda exhaustiva y exacta, lo que hará que un índice plano sea más rápido en este caso.",
+      "prompt_sources": [
+        "How-to-make-Faiss-run-faster.md",
+        "FAQ.md",
+        "Additive-quantizers.md"
+      ],
+      "retrieved_sources": [
+        "How-to-make-Faiss-run-faster.md",
+        "FAQ.md",
+        "Additive-quantizers.md",
+        "Indexing-1M-vectors.md",
+        "Faiss-indexes.md",
+        "Hybrid-CPU-GPU-search-and-multiple-GPUs.md",
+        "FAQ.md",
+        "Indexing-1M-vectors.md",
+        "Guidelines-to-choose-an-index.md",
+        "Additive-quantizers.md"
+      ],
+      "must_cite": [
+        "Faster-search.md",
+        "FAQ.md"
+      ],
+      "recall_at_prompt": true,
+      "recall_at_k": true,
+      "answer_correct": true,
+      "abstained": false,
+      "error": ""
+    },
+    {
+      "id": "m03",
+      "type": "multi_hop",
+      "question": "Tengo 250.000 vectores y quiero usar IVF. ¿Cuántos centroides debo elegir y cuántos vectores de entrenamiento necesito?",
+      "answer": "No tengo suficiente información.",
+      "prompt_sources": [
+        "How-to-make-Faiss-run-faster.md",
+        "Indexing-1G-vectors.md",
+        "Indexing-1T-vectors.md"
+      ],
+      "retrieved_sources": [
+        "How-to-make-Faiss-run-faster.md",
+        "Indexing-1G-vectors.md",
+        "Indexing-1T-vectors.md",
+        "Indexing-1T-vectors.md",
+        "Indexing-1M-vectors.md",
+        "Indexing-1M-vectors.md",
+        "Guidelines-to-choose-an-index.md",
+        "Hybrid-CPU-GPU-search-and-multiple-GPUs.md",
+        "Indexing-1T-vectors.md",
+        "Indexing-1T-vectors.md"
+      ],
+      "must_cite": [
+        "Guidelines-to-choose-an-index.md",
+        "FAQ.md"
+      ],
+      "recall_at_prompt": false,
+      "recall_at_k": true,
+      "answer_correct": false,
+      "abstained": true,
+      "error": ""
+    },
+    {
+      "id": "m04",
+      "type": "multi_hop",
+      "question": "¿Por qué IndexFlatL2 no requiere entrenamiento pero IndexIVFFlat sí, y qué componente adicional necesita IVFFlat para funcionar?",
+      "answer": "IndexFlatL2 no requiere entrenamiento porque realiza una búsqueda exacta mediante un método de fuerza bruta, evaluando todas las distancias entre los vectores. En cambio, IndexIVFFlat necesita un índice adicional para asignar los vectores a listas invertidas, lo que implica un proceso de entrenamiento para crear esas listas. Este componente adicional es el cuantizador que se utiliza para organizar los vectores en las listas invertidas.",
+      "prompt_sources": [
+        "Faiss-indexes.md",
+        "The-index-factory.md",
+        "FAQ.md"
+      ],
+      "retrieved_sources": [
+        "Faiss-indexes.md",
+        "The-index-factory.md",
+        "FAQ.md",
+        "Guidelines-to-choose-an-index.md",
+        "Special-operations-on-indexes.md",
+        "Lower-memory-footprint.md",
+        "Additive-quantizers.md",
+        "Binary-Indexes.md",
+        "Faiss-indexes.md",
+        "Faiss-indexes-(composite).md"
+      ],
+      "must_cite": [
+        "Getting-started.md",
+        "Faster-search.md"
+      ],
+      "recall_at_prompt": false,
+      "recall_at_k": false,
+      "answer_correct": true,
+      "abstained": false,
+      "error": ""
+    },
+    {
+      "id": "m05",
+      "type": "multi_hop",
+      "question": "Mi índice HNSW devuelve ids -1. ¿Qué parámetro debo subir, y qué otro parámetro de HNSW es el que determina el consumo de memoria por vector?",
+      "answer": "Debes aumentar el parámetro 'efSearch' para reducir la cantidad de ids -1 devueltos por tu índice HNSW. Además, el parámetro que determina el consumo de memoria por vector es 'M', que es el número de vecinos utilizados en el grafo.",
+      "prompt_sources": [
+        "FAQ.md",
+        "Guidelines-to-choose-an-index.md",
+        "Faiss-indexes.md"
+      ],
+      "retrieved_sources": [
+        "FAQ.md",
+        "Guidelines-to-choose-an-index.md",
+        "Faiss-indexes.md",
+        "The-index-factory.md",
+        "Indexing-1T-vectors.md",
+        "How-to-make-Faiss-run-faster.md",
+        "The-index-factory.md",
+        "Indexing-1M-vectors.md",
+        "Indexing-1M-vectors.md",
+        "Indexing-1M-vectors.md"
+      ],
+      "must_cite": [
+        "FAQ.md",
+        "Guidelines-to-choose-an-index.md"
+      ],
+      "recall_at_prompt": true,
+      "recall_at_k": true,
+      "answer_correct": true,
+      "abstained": false,
+      "error": ""
+    },
+    {
+      "id": "m06",
+      "type": "multi_hop",
+      "question": "¿Puedo usar add_with_ids con un índice Flat y, si no, qué construcción del index_factory lo habilita y a qué clase corresponde?",
+      "answer": "No, no se puede usar add_with_ids con un índice Flat. Para habilitar esta funcionalidad, se debe utilizar la construcción 'IDMap,Flat' en el index_factory, que corresponde a la clase IndexIDMap.",
+      "prompt_sources": [
+        "Guidelines-to-choose-an-index.md",
+        "Lower-memory-footprint.md",
+        "The-index-factory.md"
+      ],
+      "retrieved_sources": [
+        "Guidelines-to-choose-an-index.md",
+        "Lower-memory-footprint.md",
+        "The-index-factory.md",
+        "Faiss-indexes.md",
+        "Binary-Indexes.md",
+        "Faiss-indexes.md",
+        "Pre--and-post-processing.md",
+        "Faiss-indexes.md",
+        "Special-operations-on-indexes.md",
+        "Getting-started.md"
+      ],
+      "must_cite": [
+        "Guidelines-to-choose-an-index.md",
+        "The-index-factory.md"
+      ],
+      "recall_at_prompt": true,
+      "recall_at_k": true,
+      "answer_correct": true,
+      "abstained": false,
+      "error": ""
+    },
+    {
+      "id": "m07",
+      "type": "multi_hop",
+      "question": "¿Por qué una búsqueda con un solo vector de consulta es lenta en FAISS, y cómo se relaciona eso con la forma en que FAISS paraleliza?",
+      "answer": "La búsqueda con un solo vector de consulta puede ser lenta en FAISS debido a que las variantes de índice como `IndexIVF` y `IndexHSNW` tienen dificultades al indexar grandes cantidades de vectores idénticos. Esto se debe a que todos estos vectores terminan en la misma lista invertida, lo que requiere un escaneo secuencial. Además, FAISS está diseñado para realizar búsquedas en paralelo, pero cuando se trata de un solo vector de consulta, la eficiencia de la paralelización puede verse comprometida, lo que resulta en un rendimiento más lento.",
+      "prompt_sources": [
+        "FAQ.md",
+        "Brute-force-search-without-an-index.md",
+        "Home.md"
+      ],
+      "retrieved_sources": [
+        "FAQ.md",
+        "Brute-force-search-without-an-index.md",
+        "Home.md",
+        "FAQ.md",
+        "FAQ.md",
+        "Threads-and-asynchronous-calls.md",
+        "Getting-started.md",
+        "Home.md",
+        "_Sidebar.md",
+        "FAQ.md"
+      ],
+      "must_cite": [
+        "FAQ.md",
+        "Threads-and-asynchronous-calls.md"
+      ],
+      "recall_at_prompt": true,
+      "recall_at_k": true,
+      "answer_correct": false,
+      "abstained": false,
+      "error": ""
+    },
+    {
+      "id": "m08",
+      "type": "multi_hop",
+      "question": "¿Qué relación matemática hay entre la distancia L2 y el producto interno para vectores normalizados, y qué tipo de índice es el único que da resultados exactos?",
+      "answer": "La relación matemática entre la distancia L2 y el producto interno para vectores normalizados es que, al normalizar los vectores, la distancia L2 se puede expresar en términos del producto interno. Para vectores normalizados, la distancia L2 se convierte en una función de la similitud del coseno. El único índice que proporciona resultados exactos es el que utiliza la métrica L2, específicamente el índice `IndexFlatL2`.",
+      "prompt_sources": [
+        "MetricType-and-distances.md",
+        "Implementation-notes.md",
+        "The-index-factory.md"
+      ],
+      "retrieved_sources": [
+        "MetricType-and-distances.md",
+        "Implementation-notes.md",
+        "The-index-factory.md",
+        "MetricType-and-distances.md",
+        "Additive-quantizers.md",
+        "MetricType-and-distances.md",
+        "MetricType-and-distances.md",
+        "Faiss-indexes.md",
+        "Getting-started.md",
+        "FAQ.md"
+      ],
+      "must_cite": [
+        "MetricType-and-distances.md",
+        "Guidelines-to-choose-an-index.md"
+      ],
+      "recall_at_prompt": true,
+      "recall_at_k": true,
+      "answer_correct": false,
+      "abstained": false,
+      "error": ""
+    },
+    {
+      "id": "a01",
+      "type": "ausencia",
+      "question": "¿Cuál es el valor por defecto del parámetro efSearch en IndexHNSW?",
+      "answer": "No tengo suficiente información.",
+      "prompt_sources": [
+        "FAQ.md",
+        "Faiss-indexes.md",
+        "Guidelines-to-choose-an-index.md"
+      ],
+      "retrieved_sources": [
+        "FAQ.md",
+        "Faiss-indexes.md",
+        "Guidelines-to-choose-an-index.md",
+        "Setting-search-parameters-for-one-query.md",
+        "Indexing-1G-vectors.md",
+        "Indexing-1M-vectors.md",
+        "Indexing-1M-vectors.md",
+        "Indexing-1M-vectors.md",
+        "Index-IO,-cloning-and-hyper-parameter-tuning.md",
+        "Binary-Indexes.md"
+      ],
+      "must_cite": [],
+      "recall_at_prompt": null,
+      "recall_at_k": null,
+      "answer_correct": true,
+      "abstained": true,
+      "error": ""
+    },
+    {
+      "id": "a02",
+      "type": "ausencia",
+      "question": "¿En qué versión de FAISS se introdujo el cuantizador RaBitQ?",
+      "answer": "No tengo suficiente información.",
+      "prompt_sources": [
+        "Additive-quantizers.md",
+        "Fast-accumulation-of-PQ-and-AQ-codes-(FastScan).md",
+        "Implementation-notes.md"
+      ],
+      "retrieved_sources": [
+        "Additive-quantizers.md",
+        "Fast-accumulation-of-PQ-and-AQ-codes-(FastScan).md",
+        "Implementation-notes.md",
+        "Implementation-notes.md",
+        "Faiss-indexes-(composite).md",
+        "Binary-Indexes.md",
+        "Additive-quantizers.md",
+        "Additive-quantizers.md",
+        "Binary-Indexes.md",
+        "The-index-factory.md"
+      ],
+      "must_cite": [],
+      "recall_at_prompt": null,
+      "recall_at_k": null,
+      "answer_correct": true,
+      "abstained": true,
+      "error": ""
+    },
+    {
+      "id": "a03",
+      "type": "ausencia",
+      "question": "¿Qué garantías formales de precisión ofrece un índice IVF frente a la búsqueda exhaustiva?",
+      "answer": "Un índice IVF ofrece garantías de precisión que dependen de la configuración del parámetro `nprobe`. Al establecer `nprobe` al número total de centroides, se puede realizar una búsqueda exhaustiva en el conjunto de datos, lo que permite evaluar la pérdida de precisión atribuible únicamente a la compresión de PQ. Si la precisión no alcanza el 100%, esto podría deberse a empates en las distancias, lo que implica que el orden de los resultados es arbitrario.",
+      "prompt_sources": [
+        "FAQ.md",
+        "FAQ.md",
+        "Indexing-1M-vectors.md"
+      ],
+      "retrieved_sources": [
+        "FAQ.md",
+        "FAQ.md",
+        "Indexing-1M-vectors.md",
+        "FAQ.md",
+        "Indexing-1M-vectors.md",
+        "Hybrid-CPU-GPU-search-and-multiple-GPUs.md",
+        "Binary-Indexes.md",
+        "Indexing-1M-vectors.md",
+        "Binary-hashing-index-benchmark.md",
+        "Indexing-1M-vectors.md"
+      ],
+      "must_cite": [],
+      "recall_at_prompt": null,
+      "recall_at_k": null,
+      "answer_correct": false,
+      "abstained": false,
+      "error": ""
+    },
+    {
+      "id": "a04",
+      "type": "ausencia",
+      "question": "¿Cuál es el valor por defecto de nlist en IndexIVFFlat?",
+      "answer": "No tengo suficiente información.",
+      "prompt_sources": [
+        "FAQ.md",
+        "Faiss-indexes.md",
+        "Inverted-list-objects-and-scanners.md"
+      ],
+      "retrieved_sources": [
+        "FAQ.md",
+        "Faiss-indexes.md",
+        "Inverted-list-objects-and-scanners.md",
+        "Faiss-indexes.md",
+        "Lower-memory-footprint.md",
+        "Lower-memory-footprint.md",
+        "Faster-search.md",
+        "The-index-factory.md",
+        "Faiss-indexes.md",
+        "Binary-Indexes.md"
+      ],
+      "must_cite": [],
+      "recall_at_prompt": null,
+      "recall_at_k": null,
+      "answer_correct": true,
+      "abstained": true,
+      "error": ""
+    },
+    {
+      "id": "a05",
+      "type": "ausencia",
+      "question": "¿Cuál es la dimensionalidad máxima de vectores que soporta FAISS?",
+      "answer": "Faiss maneja colecciones de vectores de una dimensionalidad fija, típicamente de unas pocas decenas a cientos, pero no se especifica una dimensionalidad máxima exacta.",
+      "prompt_sources": [
+        "Getting-started.md",
+        "FAQ.md",
+        "Home.md"
+      ],
+      "retrieved_sources": [
+        "Getting-started.md",
+        "FAQ.md",
+        "Home.md",
+        "Getting-started.md",
+        "CPU-Faiss---Intel-SVS-‐-Usage.md",
+        "Home.md",
+        "Vector-codecs.md",
+        "Faiss-indexes-(composite).md",
+        "Lower-memory-footprint.md",
+        "Low-level-benchmarks.md"
+      ],
+      "must_cite": [],
+      "recall_at_prompt": null,
+      "recall_at_k": null,
+      "answer_correct": true,
+      "abstained": true,
+      "error": ""
+    },
+    {
+      "id": "t01",
+      "type": "trampa",
+      "question": "¿Qué modelo de embeddings recomienda FAISS para indexar texto en español?",
+      "answer": "No tengo suficiente información.",
+      "prompt_sources": [
+        "How-to-make-Faiss-run-faster.md",
+        "Guidelines-to-choose-an-index.md",
+        "Related-projects.md"
+      ],
+      "retrieved_sources": [
+        "How-to-make-Faiss-run-faster.md",
+        "Guidelines-to-choose-an-index.md",
+        "Related-projects.md",
+        "FAQ.md",
+        "Home.md",
+        "Lower-memory-footprint.md",
+        "CPU-Faiss---Intel-SVS-‐-Overview.md",
+        "FAQ.md",
+        "Vector-codecs.md",
+        "Indexing-1M-vectors.md"
+      ],
+      "must_cite": [],
+      "recall_at_prompt": null,
+      "recall_at_k": null,
+      "answer_correct": true,
+      "abstained": true,
+      "error": ""
+    },
+    {
+      "id": "t02",
+      "type": "trampa",
+      "question": "¿Cómo se configura la replicación distribuida de FAISS en un clúster de Kubernetes?",
+      "answer": "No tengo suficiente información sobre cómo configurar la replicación distribuida de FAISS en un clúster de Kubernetes.",
+      "prompt_sources": [
+        "Installing-Faiss.md",
+        "Faiss-building-blocks:-clustering,-PCA,-quantization.md",
+        "FAQ.md"
+      ],
+      "retrieved_sources": [
+        "Installing-Faiss.md",
+        "Faiss-building-blocks:-clustering,-PCA,-quantization.md",
+        "FAQ.md",
+        "Indexes-that-do-not-fit-in-RAM.md",
+        "Related-projects.md",
+        "Index-IO,-cloning-and-hyper-parameter-tuning.md",
+        "Installing-Faiss.md",
+        "How-to-make-Faiss-run-faster.md",
+        "Low-level-benchmarks.md",
+        "Related-projects.md"
+      ],
+      "must_cite": [],
+      "recall_at_prompt": null,
+      "recall_at_k": null,
+      "answer_correct": true,
+      "abstained": true,
+      "error": ""
+    }
+  ]
+}

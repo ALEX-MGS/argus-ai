@@ -56,6 +56,32 @@ def test_match_por_substring_ignora_mayusculas():
     assert not matches_expected("Devuelve la distancia L2", ["cuadrada"])
 
 
+def test_match_exige_empezar_en_frontera_de_palabra():
+    """El esperado no puede caer en medio de otra palabra."""
+    assert not matches_expected("Los índices viven en la programación", ["ram"])
+    assert matches_expected("Los índices viven en RAM", ["ram"])
+
+
+def test_match_admite_prefijos_para_cubrir_flexiones():
+    """Escribir 'normaliz' debe cubrir normaliza/normalizes/normalizados."""
+    assert matches_expected("La transformación normaliza los vectores", ["normaliz"])
+    assert matches_expected("It normalizes the input vectors", ["normaliz"])
+    assert matches_expected("vectores ya normalizados", ["normaliz"])
+
+
+def test_match_admite_expresiones_con_simbolos():
+    assert matches_expected("los ids faltantes se rellenan con -1", ["-1"])
+    assert matches_expected("la relación es 2 - 2 <x,y>", ["2 - 2"])
+    assert matches_expected("usa d*4+m*2*4 bytes", ["d*4+m*2*4"])
+
+
+def test_match_ignora_el_enfasis_de_markdown():
+    """El modelo a veces copia el formato del wiki: (_d_ * 4 + _M_ * 2 * 4)."""
+    respuesta = "La memoria es (_d_ * 4 + _M_ * 2 * 4) bytes por vector."
+
+    assert matches_expected(respuesta, ["d * 4 + m * 2 * 4"])
+
+
 def test_caso_factual_correcto():
     case = EvalCase(
         id="q01", type="factual", question="?",
@@ -144,21 +170,29 @@ def test_resumen_sin_casos_de_abstencion_no_divide_entre_cero():
 
 # --- carga del dataset -------------------------------------------------------
 
-def test_carga_el_dataset_real():
-    cases = load_cases("evals/faiss_docs/qa.jsonl")
+@pytest.mark.parametrize(
+    "dataset", ["evals/faiss_docs/qa.es.jsonl", "evals/faiss_docs/qa.en.jsonl"]
+)
+def test_carga_los_datasets_reales(dataset):
+    cases = load_cases(dataset)
 
-    assert len(cases) == 10
-    assert {c.type for c in cases} == {
-        "factual", "explicativa", "multi_hop", "ausencia", "trampa"
-    }
+    assert len(cases) == 30
+    assert {c.type for c in cases} == {"factual", "multi_hop", "ausencia", "trampa"}
 
-    # Los casos de abstención no deben declarar documento esperado.
     for case in cases:
         if case.type in ("ausencia", "trampa"):
-            assert case.must_cite == []
+            assert case.must_cite == [], f"{case.id} no debe declarar must_cite"
         else:
             assert case.must_cite, f"{case.id} necesita must_cite"
             assert case.expected_any, f"{case.id} necesita expected_any"
+
+
+def test_los_dos_datasets_son_equivalentes():
+    """Ambos idiomas deben cubrir los mismos casos, para poder compararlos."""
+    es = {c.id: c.type for c in load_cases("evals/faiss_docs/qa.es.jsonl")}
+    en = {c.id: c.type for c in load_cases("evals/faiss_docs/qa.en.jsonl")}
+
+    assert es == en
 
 
 def test_must_cite_string_se_normaliza_a_lista():

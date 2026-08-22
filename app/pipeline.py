@@ -88,6 +88,7 @@ Pregunta:
 Responde la pregunta usando SOLO el contexto proporcionado.
 No copies literalmente el contexto.
 Si la respuesta no está en el contexto, di que no tienes suficiente información.
+Responde en el mismo idioma en que está escrita la pregunta.
 
 Devuelve la respuesta en JSON con este formato:
 

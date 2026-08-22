@@ -18,6 +18,7 @@ from __future__ import annotations
 import argparse
 import asyncio
 import json
+import re
 import subprocess
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
@@ -142,10 +143,43 @@ def is_abstention(answer: str) -> bool:
     return any(marker in minuscula for marker in ABSTENTION_MARKERS)
 
 
+def normalize(texto: str) -> str:
+    """Deja el texto listo para comparar.
+
+    Quita los guiones bajos del énfasis de markdown (`_d_` → `d`) y colapsa los
+    espacios, para que una respuesta que copió el formato del wiki coincida con
+    el texto esperado escrito en plano. Los asteriscos se conservan: en este
+    corpus suelen ser multiplicación, no formato.
+    """
+    sin_enfasis = texto.replace("_", "")
+    return " ".join(sin_enfasis.lower().split())
+
+
 def matches_expected(answer: str, expected_any: list[str]) -> bool:
-    """Calificación por substring, insensible a mayúsculas."""
-    minuscula = answer.lower()
-    return any(esperado.lower() in minuscula for esperado in expected_any)
+    """¿La respuesta contiene alguno de los textos esperados?
+
+    La comparación exige que el texto esperado empiece en frontera de palabra,
+    para que "no" no dé positivo dentro de "normaliza". No exige frontera al
+    final, así "normaliz" sí acepta "normaliza" y "normalizes": los esperados
+    se escriben como prefijos a propósito, para cubrir variantes de flexión.
+    """
+    limpia = normalize(answer)
+
+    for esperado in expected_any:
+        esperado = normalize(esperado)
+
+        if not esperado:
+            continue
+
+        patron = re.escape(esperado)
+
+        if esperado[0].isalnum():
+            patron = r"(?<!\w)" + patron
+
+        if re.search(patron, limpia):
+            return True
+
+    return False
 
 
 def evaluate_case(case: EvalCase, answer_text: str,
