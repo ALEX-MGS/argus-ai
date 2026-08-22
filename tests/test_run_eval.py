@@ -51,6 +51,23 @@ def test_detecta_abstencion_en_ambos_idiomas():
     assert not is_abstention("IndexFlatL2 devuelve la distancia al cuadrado.")
 
 
+def test_detecta_abstencion_con_redacciones_distintas():
+    """Casos reales de corridas anteriores que la lista literal no atrapaba."""
+    assert is_abstention(
+        "Faiss maneja vectores de dimensión fija. Sin embargo, el contexto no "
+        "especifica un límite máximo exacto para la dimensionalidad."
+    )
+    assert is_abstention("El wiki no menciona la versión en que se introdujo.")
+    assert is_abstention("The documentation does not state a default value.")
+    assert is_abstention("That cannot be determined from the provided context.")
+
+
+def test_no_confunde_una_respuesta_negativa_con_abstencion():
+    """Responder 'no' a una pregunta de sí/no no es abstenerse."""
+    assert not is_abstention("No, Faiss no soporta ids de tipo string.")
+    assert not is_abstention("No, re-training an index is not supported.")
+
+
 def test_match_por_substring_ignora_mayusculas():
     assert matches_expected("Devuelve la distancia CUADRADA", ["cuadrada"])
     assert not matches_expected("Devuelve la distancia L2", ["cuadrada"])

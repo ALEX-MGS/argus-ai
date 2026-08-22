@@ -29,19 +29,20 @@ from app.pipeline import RagPipeline, build_default_pipeline
 
 RESULTS_DIR = Path("evals/results")
 
-# Marcadores de abstención, en los dos idiomas en que puede responder el modelo.
-ABSTENTION_MARKERS = (
-    "no tengo suficiente informaci",
-    "no hay suficiente informaci",
-    "no se proporciona",
-    "no se especifica",
-    "no está en el contexto",
-    "no esta en el contexto",
-    "not enough information",
-    "insufficient information",
-    "does not provide",
-    "not specified",
-    "no information",
+# Patrones de abstención, en los dos idiomas en que puede responder el modelo.
+# Van como expresiones regulares y no como texto literal porque el modelo varía
+# la redacción: "no se especifica" y "no especifica" son la misma abstención, y
+# una lista de literales falla en cuanto aparece una variante nueva.
+ABSTENTION_PATTERNS = (
+    r"no (se |lo |la )?(especifica|indica|menciona|proporciona|detalla|define|precisa)",
+    r"no (hay|tengo|existe|se dispone de|contamos con) (suficiente|informaci|datos)",
+    r"no (está|esta|aparece|figura) en (el|los) (contexto|documento)",
+    r"(no|sin) informaci[oó]n (suficiente|disponible|en el contexto)",
+    r"not (enough|sufficient) (information|context|detail)",
+    r"(does not|doesn't|do not|don't) (specify|mention|provide|state|indicate|define)",
+    r"(is |are )?not specified",
+    r"no information (is )?(available|provided|given)",
+    r"cannot (be )?(determined|answered)",
 )
 
 ABSTENTION_TYPES = ("ausencia", "trampa")
@@ -139,8 +140,8 @@ def extract_answer_text(raw_response: str) -> str:
 
 def is_abstention(answer: str) -> bool:
     """¿La respuesta admite no tener información?"""
-    minuscula = answer.lower()
-    return any(marker in minuscula for marker in ABSTENTION_MARKERS)
+    limpia = normalize(answer)
+    return any(re.search(patron, limpia) for patron in ABSTENTION_PATTERNS)
 
 
 def normalize(texto: str) -> str:
@@ -300,8 +301,11 @@ def git_commit() -> str:
             ["git", "rev-parse", "--short", "HEAD"],
             capture_output=True, text=True, timeout=5, check=True,
         )
+        # Solo cuentan los cambios en archivos ya versionados: la propia corrida
+        # escribe un resultado nuevo en evals/results/, y eso no debe marcar
+        # como sucio el estado del código que se está midiendo.
         sucio = subprocess.run(
-            ["git", "status", "--porcelain"],
+            ["git", "status", "--porcelain", "--untracked-files=no"],
             capture_output=True, text=True, timeout=5, check=True,
         )
         marca = "-sucio" if sucio.stdout.strip() else ""
