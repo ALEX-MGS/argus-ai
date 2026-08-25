@@ -222,15 +222,12 @@ async def run_cases(cases: list[EvalCase], pipeline: RagPipeline,
 
         try:
             if retrieval_only:
-                vector = await pipeline.embedding_service.embed(case.question)
-                docs = pipeline.vector_store.search(
-                    vector, k=pipeline.k, threshold=pipeline.threshold
-                )
-                from app.pipeline import rerank
+                # Se usa el mismo retrieve() del pipeline, no una copia: si el
+                # arnés reimplementara la recuperación, mediría otra cosa.
+                todos, top = await pipeline.retrieve(case.question)
 
-                reranked = rerank(case.question, docs)
-                retrieved = [d.get("source", "unknown") for d in reranked]
-                prompt_sources = retrieved[: pipeline.top_docs]
+                retrieved = [d.get("source", "unknown") for d in todos]
+                prompt_sources = [d.get("source", "unknown") for d in top]
 
                 outcome = CaseOutcome(
                     id=case.id,
@@ -345,8 +342,8 @@ def print_report(outcomes: list[CaseOutcome], resumen: dict) -> None:
         print(f"Casos con error                   : {resumen['errores']}")
 
 
-def save_results(outcomes: list[CaseOutcome], resumen: dict,
-                 dataset: str, label: str, retrieval_only: bool) -> Path:
+def save_results(outcomes: list[CaseOutcome], resumen: dict, dataset: str,
+                 label: str, retrieval_only: bool, rerank_activo: bool = True) -> Path:
     """Guarda la corrida en disco, identificada por commit y fecha."""
     RESULTS_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -362,6 +359,7 @@ def save_results(outcomes: list[CaseOutcome], resumen: dict,
                 "dataset": dataset,
                 "etiqueta": label,
                 "modo": "solo_recuperacion" if retrieval_only else "completo",
+                "rerank": rerank_activo,
                 "resumen": resumen,
                 "casos": [asdict(o) for o in outcomes],
             },
@@ -379,14 +377,17 @@ async def main() -> None:
     parser.add_argument("dataset", help="Ruta al JSONL de pares")
     parser.add_argument("--retrieval-only", action="store_true",
                         help="Solo mide recuperación; no llama al LLM")
+    parser.add_argument("--no-rerank", action="store_true",
+                        help="Conserva el orden de FAISS en vez de reordenar léxicamente")
     parser.add_argument("--label", default="", help="Etiqueta para identificar la corrida")
 
     args = parser.parse_args()
 
     cases = load_cases(args.dataset)
-    print(f"Casos cargados: {len(cases)}\n")
+    print(f"Casos cargados: {len(cases)}")
+    print(f"Rerank: {'apagado' if args.no_rerank else 'encendido'}\n")
 
-    pipeline = build_default_pipeline()
+    pipeline = build_default_pipeline(use_rerank=not args.no_rerank)
 
     outcomes = await run_cases(cases, pipeline, args.retrieval_only)
     resumen = summarize(outcomes)
@@ -394,7 +395,8 @@ async def main() -> None:
     print_report(outcomes, resumen)
 
     destino = save_results(
-        outcomes, resumen, args.dataset, args.label, args.retrieval_only
+        outcomes, resumen, args.dataset, args.label,
+        args.retrieval_only, rerank_activo=not args.no_rerank,
     )
     print(f"\nResultados guardados en {destino}")
 

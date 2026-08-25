@@ -110,6 +110,7 @@ class RagPipeline:
         k: int = DEFAULT_K,
         threshold: float | None = DEFAULT_THRESHOLD,
         top_docs: int = DEFAULT_TOP_DOCS,
+        use_rerank: bool = True,
     ):
         self.embedding_service = embedding_service
         self.vector_store = vector_store
@@ -117,6 +118,23 @@ class RagPipeline:
         self.k = k
         self.threshold = threshold
         self.top_docs = top_docs
+        self.use_rerank = use_rerank
+
+    async def retrieve(self, query: str) -> tuple[list[dict], list[dict]]:
+        """Recupera del índice y devuelve (todos_ordenados, los_que_van_al_prompt).
+
+        Con `use_rerank=False` se conserva el orden de FAISS, que ordena por
+        distancia. Sirve para medir si el rerank léxico aporta o estorba.
+        """
+        query_vector = await self.embedding_service.embed(query)
+
+        retrieved_raw = self.vector_store.search(
+            query_vector, k=self.k, threshold=self.threshold
+        )
+
+        ordenados = rerank(query, retrieved_raw) if self.use_rerank else retrieved_raw
+
+        return ordenados, ordenados[: self.top_docs]
 
     async def answer(
         self, query: str, chat_history: list[str] | None = None
@@ -124,14 +142,7 @@ class RagPipeline:
         """Responde una consulta y devuelve el resultado con sus intermedios."""
         chat_history = chat_history or []
 
-        query_vector = await self.embedding_service.embed(query)
-
-        retrieved_raw = self.vector_store.search(
-            query_vector, k=self.k, threshold=self.threshold
-        )
-
-        reranked = rerank(query, retrieved_raw)
-        top = reranked[: self.top_docs]
+        reranked, top = await self.retrieve(query)
 
         context_text = "\n".join(doc["text"] for doc in top)
         prompt = build_prompt(query, context_text, chat_history)
@@ -152,7 +163,7 @@ class RagPipeline:
         )
 
 
-def build_default_pipeline() -> RagPipeline:
+def build_default_pipeline(use_rerank: bool = True) -> RagPipeline:
     """Construye el pipeline con el índice ya persistido en disco."""
     from app.models.openai_llm import OpenAILLM
 
@@ -163,4 +174,5 @@ def build_default_pipeline() -> RagPipeline:
         embedding_service=EmbeddingService(),
         vector_store=vector_store,
         llm=OpenAILLM(),
+        use_rerank=use_rerank,
     )

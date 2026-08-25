@@ -212,6 +212,40 @@ def test_los_dos_datasets_son_equivalentes():
     assert es == en
 
 
+def test_el_rerank_se_puede_apagar():
+    """Con el rerank apagado se conserva el orden que devuelve FAISS."""
+    import asyncio
+
+    from app.pipeline import RagPipeline
+
+    docs = [
+        {"text": "sin coincidencias lexicas", "source": "correcto.md"},
+        {"text": "nprobe nprobe nprobe", "source": "ruidoso.md"},
+    ]
+
+    class StoreFalso:
+        def search(self, vector, k=10, threshold=None):
+            return list(docs)
+
+    class EmbeddingsFalsos:
+        async def embed(self, texto):
+            return [0.0]
+
+    def primeras_fuentes(use_rerank):
+        pipeline = RagPipeline(
+            EmbeddingsFalsos(), StoreFalso(), llm=None,
+            top_docs=1, use_rerank=use_rerank,
+        )
+        _, top = asyncio.run(pipeline.retrieve("nprobe"))
+        return top[0]["source"]
+
+    # Con rerank, el documento cargado de la palabra de la consulta sube.
+    assert primeras_fuentes(use_rerank=True) == "ruidoso.md"
+
+    # Sin rerank, se respeta el orden de FAISS.
+    assert primeras_fuentes(use_rerank=False) == "correcto.md"
+
+
 def test_must_cite_string_se_normaliza_a_lista():
     case = EvalCase.from_json(
         {"id": "x", "type": "factual", "question": "?", "must_cite": "A.md"}
