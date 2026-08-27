@@ -10,6 +10,7 @@ Los valores por defecto reproducen el comportamiento vigente del sistema
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass, field
 
 from app.embeddings.embedding_service import EmbeddingService
@@ -54,19 +55,54 @@ class PipelineResult:
         return [chunk.source for chunk in self.sent_to_prompt]
 
 
+# Palabras vacías: no aportan señal y, al buscarse por substring, encontraban
+# coincidencias dentro de otras palabras ("de" dentro de "index", "order").
+STOPWORDS = frozenset("""
+a al algo alguna algunas alguno algunos ante antes como con contra cual cuales
+cuando de del desde donde dos e el ella ellas ello ellos en entre era es esa
+esas ese eso esos esta estan estas este esto estos ha hace hacer hasta hay la
+las le les lo los mas me mi mis mucho muy no nos o os otra otras otro otros
+para pero poco por porque que quien se ser si sin sobre son su sus tambien
+tan tanto te tiene todo todos tu tus un una uno unos y ya
+a about all also an and any are as at be been but by can could do does for
+from had has have how i if in into is it its may more most no not of on once
+only or other our out over should so some such than that the their them then
+there these they this those through to too under until up use used using was
+we were what when where which while who why will with would you your
+""".split())
+
+_WORD = re.compile(r"\w+", re.UNICODE)
+
+
+def content_terms(text: str) -> set[str]:
+    """Palabras con contenido de un texto: completas, en minúscula, sin vacías."""
+    return {
+        palabra
+        for palabra in _WORD.findall(text.lower())
+        if palabra not in STOPWORDS and len(palabra) > 1
+    }
+
+
 def rerank(query: str, docs: list[dict]) -> list[dict]:
-    """Reordena por coincidencia léxica de palabras de la consulta.
+    """Reordena por cuántos términos con contenido de la consulta aparecen.
 
-    Limitación conocida (punto 2.3 del plan): cuenta coincidencias por
-    substring y no descarta stopwords, así que premia documentos largos.
-    Se conserva tal cual para que la línea base mida el sistema real.
+    Tres decisiones, cada una contra un defecto medido de la versión anterior:
+
+    - Palabras completas, no substrings: "de" ya no coincide dentro de "index".
+    - Sin palabras vacías: solo pesan los términos que discriminan.
+    - Términos distintos, no ocurrencias: un documento largo no puede subir por
+      repetir la misma palabra muchas veces.
+
+    Si la consulta no comparte ningún término con ningún documento —el caso de
+    preguntar en español sobre un corpus en inglés— todos empatan en cero y el
+    orden de FAISS se conserva, porque `sort` es estable. El rerank deja de
+    aportar, pero tampoco estorba.
     """
-    scored_docs = []
+    terminos_consulta = content_terms(query)
 
-    for doc in docs:
-        text = doc["text"]
-        score = sum(1 for word in query.lower().split() if word in text.lower())
-        scored_docs.append((score, doc))
+    scored_docs = [
+        (len(terminos_consulta & content_terms(doc["text"])), doc) for doc in docs
+    ]
 
     scored_docs.sort(reverse=True, key=lambda item: item[0])
 
